@@ -131,10 +131,10 @@ class Spell(Base):
     school_id: Mapped[int] = mapped_column(ForeignKey("spell_schools.id"))
     school: Mapped[SpellSchool] = relationship("SpellSchool")
 
-    casting_time_id: Mapped[int] = mapped_column(ForeignKey("spell_schools.id"))
+    casting_time_id: Mapped[int] = mapped_column(ForeignKey("spell_casting_times.id"))
     casting_time: Mapped[SpellCastingTime] = relationship("SpellCastingTime")
 
-    spell_resistance_id: Mapped[int] = mapped_column(ForeignKey("spell_schools.id"))
+    spell_resistance_id: Mapped[int] = mapped_column(ForeignKey("spell_resistances.id"))
     spell_resistance: Mapped[SpellResistance] = relationship("SpellCastingTime")
 
     casting_range: Mapped[str] = mapped_column(String, index=True)
@@ -144,8 +144,6 @@ class Spell(Base):
     saving_throw: Mapped[str] = mapped_column(String, index=True)
 
     description: Mapped[str] = mapped_column(String, index=True)
-
-    material_components: Mapped[str] = mapped_column(String, index=True)
 
     duration_id: Mapped[int] = mapped_column(ForeignKey("spell_durations.id"))
     duration: Mapped[SpellDuration] = relationship("SpellDuration")

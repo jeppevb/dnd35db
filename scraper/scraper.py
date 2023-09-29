@@ -80,7 +80,7 @@ def parse_type1(page_content: str) -> List[str]:
     # split on <h6>
 
 def parse_type3(page_content: str) -> List[str]:
-    pass
+    return []
     # discard everything before this <h6>
     # discard everything after the last <br/>
 
@@ -91,9 +91,15 @@ def get_or_create_source(source_name, session: Session = Depends(get_db)):
 
 def process_file(page_content: str, source_name: str, session: Session = Depends(get_db)):
     source = get_or_create_source(source_name)
-    for spell in parse_type1(page_content):
-        
-        session.add()
+    try:
+        for spell in parse_type1(page_content):
+            print('--------------------------------------------------------')
+            print(spell)
+        for spell in parse_type3(page_content):
+            print('--------------------------------------------------------')
+            print(spell)
+    except ValueError:
+        pass
 
 
 for row in soup.find('table').find_all('tr'):

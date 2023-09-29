@@ -1,12 +1,10 @@
 ﻿import logging
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from .schemas import Subject as DtoSubject, BaseSubject as DtoSubjectInput, VoteInput as DtoVoteInput, Matchup as DtoMatchup, Smersh as CreateSmersh
-from .service import get, check_user_exists, vote as register_vote, get_matchup, create_smersh, create_subject
-
+from .schemas import Spell as DtoSpell
 from ..database import SessionLocal
 
 log = logging.getLogger(__name__)
@@ -23,13 +21,31 @@ def get_db():
 
 
 @router.get(
-    "/{smersh}",
-    response_model=List[DtoSubject],
-    summary="Retrieves a list of subjects.",
+    "/spell",
+    response_model=List[DtoSpell],
+    summary="Retrieves a list of spells.",
 )
-def get_root(smersh: str, db_session: Session = Depends(get_db)) -> List[DtoSubject]:
+def get_query_spell(name_filter: Optional[str] = None,
+                    sources: Optional[list[str]] = None,
+                    description_filter: Optional[str] = None,
+                    casting_time_filter: Optional[str] = None,
+                    spell_resistance_filter: Optional[str] = None,
+                    casting_range_filter: Optional[str] = None,
+                    target_filter: Optional[str] = None,
+                    saving_throw_filter: Optional[str] = None,
+                    material_components: Optional[list[str]] = None,
+                    duration_filter: Optional[str] = None,
+                    class_levels: Optional[list[str]] = None,
+                    db_session: Session = Depends(get_db)) -> List[DtoSpell]:
     """Retrieves a list of subjects."""
-    return [DtoSubject(name=s.name, smersh=smersh, rating=s.rating) for s in get(smersh, db_session)]
+    return [DtoSpell(name=s.name, smersh=smersh, rating=s.rating) for s in get_spells(name_filter, sources,
+                    description_filter, casting_time_filter, spell_resistance_filter,
+                    casting_range_filter,
+                    target_filter,
+                    saving_throw_filter,
+                    material_components,
+                    duration_filter,
+                    class_levels, db_session)]
 
 
 @router.post(
